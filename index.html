@@ -1,22 +1,30 @@
-<html>
-    <head>
-        <title>RPS demo</title>
-        <style>
-            a {
-                color: white;
-            }
-            button {
-                color: white;
-                background-color: aquamarine;
-            }
-            p {
-                color: white;
-            }
-        </style>
-    </head>
-    <body style="background-color: black;">
-        <img src="img.png" style="width: 500px;">
-        <p>To play the game use this .img file as a floppy in a virtual machine. Make sure the VM is a BIOS not UEFI system.</p>
-        <a href="rps.img" download><button>Download Image</button></a>
-    </body>
-</html>
+<!doctype html>
+<title>Alpine</title>
+<script src="libv86.js"></script>
+<script>
+"use strict";
+window.onload = function()
+{
+    var emulator = new V86({
+        wasm_path: "v86.wasm",
+        memory_size: 512 * 1024 * 1024,
+        vga_memory_size: 8 * 1024 * 1024,
+        screen_container: document.getElementById("screen_container"),
+        bios: { url: "seabios.bin" },
+        vga_bios: { url: "vgabios.bin" },
+        fda: { url: "floppy.img" },
+        //filesystem: {
+        //    baseurl: "../images/alpine-rootfs-flat",
+        //    basefs: "../images/alpine-fs.json",
+        //},
+        autostart: true,
+        // bzimage_initrd_from_filesystem: true,
+        // cmdline: "rw root=host9p rootfstype=9p rootflags=trans=virtio,cache=loose modules=virtio_pci tsc=reliable",
+        //initial_state: { url: "../images/alpine-state.bin.zst" },
+    });
+};
+</script>
+<div id="screen_container">
+    <div style="white-space: pre; font: 14px monospace; line-height: 14px"></div>
+    <canvas style="display: none"></canvas>
+</div>
