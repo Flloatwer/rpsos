@@ -1,0 +1,1 @@
+nasm -f bin rps.asm -o rps.img
