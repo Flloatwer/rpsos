@@ -1,52 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>RPS OS Demo</title>
-    <style>
-        body {
-            background: black;
-            color: white;
-            font-family: monospace;
-            text-align: center;
-        }
-
-        #screen {
-            margin: auto;
-            width: 640px;
-            height: 400px;
-        }
-    </style>
 </head>
-
-<body>
-
-<h1>RPS OS</h1>
 
 <div id="screen"></div>
 
 <script src="libv86.js"></script>
 
 <script>
-const emulator = new V86({
+var emulator = new V86Starter({
     wasm_path: "v86.wasm",
 
-    memory_size: 16 * 1024 * 1024,
-
-    vga_memory_size: 8 * 1024 * 1024,
-
-    screen_container: document.getElementById("screen"),
-
     bios: {
-        url: "bios/seabios.bin"
+        url: "seabios.bin"
     },
 
     vga_bios: {
-        url: "bios/vgabios.bin"
+        url: "vgabios.bin"
     },
 
     fda: {
-        url: "floppy.img"
+        url: "rps.img"
     },
+
+    screen_container: document.getElementById("screen"),
 
     autostart: true
 });
