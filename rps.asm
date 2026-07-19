@@ -1,6 +1,13 @@
 BITS 16
 ORG 0x7C00 ; location where mbr loads to
 
+;fix es and ds bug
+cli
+xor ax,ax
+mov ds,ax
+mov ss,ax
+mov sp,0x7C00
+
 ;clear screen
 mov ax, 0x0003
 int 0x10
@@ -29,11 +36,12 @@ ret_print:
 
 loop:
     mov ax, 0x0040 ; get timer tick to generate random value
-    mov ds, ax
+    mov es, ax
     mov bx, [0x006C]
     xor dx, dx ; mod 3 to turn the value into 0-2 (0=rock 1=paper etc.)
     mov bx, 3
     div bx
+    mov bx, dx
     mov si, you_pick
     call print
     jmp check_key
@@ -41,13 +49,13 @@ check_key:
     mov ah, 0x00 ; bios read function
     int 0x16
     cmp al, '1' ; cmp keys
-    je rock
+    je rock_
     cmp al, '2'
-    je paper
+    je paper_
     cmp al, '3'
-    je scissors
+    je scissors_
     jmp check_key ; jump back if none match
-rock:
+rock_:
     mov si, rock
     call print
     mov si, i_picked
@@ -56,42 +64,54 @@ rock:
     cmp bx, 0 ; tie
     je tie
     cmp bx, 1 ; paper
-    je i-won
+    je iwon
     cmp bx, 2 ; scissors
-    je you-won
-paper:
+    je youwon
+    jmp loop
+paper_:
     mov si, paper
     call print
     mov si, i_picked
     call print
     call ai_pick
     cmp bx, 0 ;win
-    je you-won
+    je youwon
     cmp bx, 1 ;tie
     je tie
     cmp bx, 2 ;loss
-    je i-won
-scissors:
+    je iwon
+    jmp loop
+scissors_:
     mov si, scissors
     call print
     mov si, i_picked
     call print
     call ai_pick
     cmp bx, 0
-    je i-won
+    je iwon
     cmp bx, 1
-    je you-won
+    je youwon
     cmp bx, 2
     je tie
+    jmp loop
 
 ;print the results and jump back
-i-won:
+iwon:
     mov si, i_won
     call print
-    jmp 
+    jmp loop
+youwon:
+    mov si, you_won
+    call print
+    jmp loop
+tie:
+    mov si, we_tied
+    call print
+    jmp loop
 
 ;print what the ai picked
 ai_pick:
+    push bx
     cmp bx, 0 ;rock
     je ai_rock
     cmp bx, 1 ;paper
@@ -101,14 +121,17 @@ ai_pick:
 ai_rock:
     mov si, rock
     call print
+    pop bx
     ret
 ai_paper:
     mov si, paper
     call print
+    pop bx
     ret
 ai_scissors:
     mov si, scissors
     call print
+    pop bx
     ret
 
 ; values and strings (0x0D, 0x0A is newline)
