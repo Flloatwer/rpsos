@@ -74,7 +74,21 @@ paper:
 scissors:
     mov si, scissors
     call print
-    
+    mov si, i_picked
+    call print
+    call ai_pick
+    cmp bx, 0
+    je i-won
+    cmp bx, 1
+    je you-won
+    cmp bx, 2
+    je tie
+
+;print the results and jump back
+i-won:
+    mov si, i_won
+    call print
+    jmp 
 
 ;print what the ai picked
 ai_pick:
