@@ -1,5 +1,6 @@
-# simple rock paper scissors as an os
+# Simple Rock Paper Scissors as an OS
 
-run make_img.sh to get a .img file and make sure to boot it from/as floppy  
-if youre using qemu: qemu-system-i386 rps.img
-play in browser on flloatwer.github.io/rpsos
+rock_paper_scissor_OS is a simple, standalone Operating System written entirely in Assembly. It fits into the boot sector meaning its only 512 bytes. The "OS" mostly releis on BIOS functions (teletype printing, keyboard input) and the PIT timer, so stuff that you could find on the first x86 home computer.  
+**To play the game** boot it up from a floppy (USB or CD booting wont work), and use the number keys to play rock paper scissors against an AI.  
+**Play the demo on: flloatwer.github.io/rpsos**  
+The demo uses copy's web x86 emulator https://github.com/copy/v86
