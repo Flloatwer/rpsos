@@ -21,7 +21,9 @@ jmp loop
 
 ; print subroutine
 print:
-    push ax ; store ax since it will be changed
+    push ax ; store since they will be changed
+    push bx
+    push dx
     jmp print_main
 print_main:
     lodsb ; basically load from si into al and si++
@@ -31,17 +33,20 @@ print_main:
     int 0x10 ; call bios teletype
     jmp print_main
 ret_print:
-    pop ax ; return ax to og state and ret
+    pop dx ; return to og state and ret
+    pop bx
+    pop ax
     ret
 
 loop:
-    mov ax, 0x0040 ; get timer tick to generate random value
-    mov es, ax
-    mov bx, [0x006C]
-    xor dx, dx ; mod 3 to turn the value into 0-2 (0=rock 1=paper etc.)
+    mov si, newln
+    call print
+    in al, 0x40     ; read PIT timer
+    xor ah, ah      ; AX = value 0-25
+    xor dx, dx
     mov bx, 3
     div bx
-    mov bx, dx
+    mov bx, dx      ; 0,1,2
     mov si, you_pick
     call print
     jmp check_key
@@ -145,6 +150,7 @@ we_tied db "we tied", 0x0D, 0x0A, 0
 rock db "rock", 0x0D, 0x0A, 0
 paper db "paper", 0x0D, 0x0A, 0
 scissors db "scissors", 0x0D, 0x0A, 0
+newln db 0x0D, 0x0A, 0
 
 times 510 - ($ - $$) db 0 ; fill rest of bootsector with zeroes
 dw 0xAA55 ; magic word that shows this is bootable
