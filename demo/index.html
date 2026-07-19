@@ -1,0 +1,17 @@
+var emulator = new V86({
+    wasm_path: "v86.wasm",
+
+    bios: {
+        url: "bios/seabios.bin",
+    },
+
+    vga_bios: {
+        url: "bios/vgabios.bin",
+    },
+
+    fda: {
+        url: "floppy.img",
+    },
+
+    autostart: true,
+});
