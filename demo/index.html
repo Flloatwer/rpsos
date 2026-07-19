@@ -1,17 +1,19 @@
+<script>
 var emulator = new V86({
     wasm_path: "v86.wasm",
 
     bios: {
-        url: "bios/seabios.bin",
+        url: "seabios.bin",
     },
 
     vga_bios: {
-        url: "bios/vgabios.bin",
+        url: "vgabios.bin",
     },
 
     fda: {
-        url: "floppy.img",
+        url: "rps.img",
     },
 
     autostart: true,
 });
+</script>
